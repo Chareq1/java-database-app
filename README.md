@@ -2,6 +2,7 @@
 ## Table of contents
 * [General info](#general-info)
 * [Technologies](#technologies)
+* [Usage](#usage)
 
 ## General info
 This project is a simple application in Java, built for generating reports from Firebird database.
