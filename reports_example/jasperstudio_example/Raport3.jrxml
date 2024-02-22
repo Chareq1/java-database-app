@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Raport3" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryNewPage="true" isSummaryWithPageHeaderAndFooter="true" uuid="eb1952f7-4c4a-40a1-98ae-f778e2ee4432">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Firebird.jrdax"/>
+	<parameter name="idCode" class="java.lang.String"/>
+	<parameter name="qrCode" class="java.lang.String"/>
+	<parameter name="wlasciciel" class="java.lang.String"/>
+	<parameter name="Id_w" class="java.lang.Integer"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT "STACJE"."ID_STACJI",
+	"STACJE"."NAZWA",
+	COUNT( Badania.Id_stacji) AS Ilosc_badan,
+	COALESCE( SUM( Platnosci.Kwota),0) AS Ilosc_zarobku,
+	COUNT( Zatrudnienie.Id_stacji) AS Ilosc_diagnostow
+FROM "STACJE"
+	INNER JOIN "ZATRUDNIENIE" ON 
+	 "STACJE"."ID_STACJI" = "ZATRUDNIENIE"."ID_STACJI" 
+	LEFT OUTER JOIN "BADANIA" ON 
+	 "STACJE"."ID_STACJI" = "BADANIA"."ID_STACJI" 
+	LEFT OUTER JOIN "PLATNOSCI" ON 
+	 "BADANIA"."ID_BADANIA" = "PLATNOSCI"."ID_BADANIA" 
+WHERE 
+	 "STACJE"."ID_WLASCICIELA_STACJI" = $P{Id_w} 
+GROUP BY "STACJE"."ID_STACJI",
+	"STACJE"."NAZWA"]]>
+	</queryString>
+	<field name="ID_STACJI" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="ID_STACJI"/>
+		<property name="com.jaspersoft.studio.field.label" value="ID_STACJI"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="STACJE"/>
+	</field>
+	<field name="NAZWA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="NAZWA"/>
+		<property name="com.jaspersoft.studio.field.label" value="NAZWA"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="STACJE"/>
+	</field>
+	<field name="ILOSC_BADAN" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="COUNT"/>
+		<property name="com.jaspersoft.studio.field.label" value="ILOSC_BADAN"/>
+	</field>
+	<field name="ILOSC_ZAROBKU" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="COALESCE"/>
+		<property name="com.jaspersoft.studio.field.label" value="ILOSC_ZAROBKU"/>
+	</field>
+	<field name="ILOSC_DIAGNOSTOW" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="COUNT"/>
+		<property name="com.jaspersoft.studio.field.label" value="ILOSC_DIAGNOSTOW"/>
+	</field>
+	<variable name="ilosc_zatrudnionych" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{ILOSC_DIAGNOSTOW}]]></variableExpression>
+	</variable>
+	<variable name="ilosc_zarobkow" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{ILOSC_ZAROBKU}]]></variableExpression>
+	</variable>
+	<variable name="ilosc_badan" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{ILOSC_BADAN}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="80" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="-20" y="-20" width="595" height="100" backcolor="#365896" uuid="ac3aff45-c17c-43da-ae0c-8e290f31ad80">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<staticText>
+					<reportElement x="20" y="15" width="499" height="35" forecolor="#FFFFFF" uuid="60659eb2-4ad0-4fd8-9094-6db2ffb218ef">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement>
+						<font fontName="Montserrat" size="26" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Stacje Kontroli Pojazdów]]></text>
+				</staticText>
+				<frame>
+					<reportElement x="20" y="50" width="555" height="20" uuid="ad2f7e26-e012-49bf-a3c9-3323aabcdc49"/>
+					<textField>
+						<reportElement x="0" y="0" width="555" height="20" forecolor="#FFFFFF" uuid="56259d18-3f5c-4ec8-95ce-58118106e10c">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						</reportElement>
+						<textElement>
+							<font fontName="Montserrat" size="16"/>
+						</textElement>
+						<textFieldExpression><![CDATA["Podsumowanie informacji ze wszystkich stacji dla:"]]></textFieldExpression>
+					</textField>
+				</frame>
+				<textField>
+					<reportElement x="20" y="70" width="555" height="20" forecolor="#FFFFFF" uuid="5671b2ef-5c42-44fe-9d32-78b0d66e9887">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement>
+						<font fontName="Montserrat" size="16"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{wlasciciel}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="25" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="135" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="0" y="0" width="555" height="20" uuid="0967c7f2-8a49-4d68-b5b4-ea154a8b0ca9">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ad636c9b-0375-46fd-b5ba-0578a071d4ea"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Montserrat" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ID_STACJI}+"   |   "+$F{NAZWA}]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement x="0" y="20" width="555" height="90" uuid="c757909b-edd1-404f-b36a-6f6af6a66fbc"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textField>
+					<reportElement x="195" y="15" width="100" height="20" uuid="86324959-6bd5-44a8-8baa-e23f2d741aad">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a35d7269-8e0c-4d24-b4f7-9629f5f0d7f6"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Montserrat"/>
+					</textElement>
+					<textFieldExpression><![CDATA[NumberFormat.getIntegerInstance().format($F{ILOSC_DIAGNOSTOW})]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="15" y="35" width="220" height="20" uuid="c5e26a5a-50dc-448c-826e-9735c4dc1524">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c14f0715-a516-4265-82fa-209b7ecc32eb"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Montserrat" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Ilość przeprowadonych badań na stacji:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="15" y="15" width="180" height="20" uuid="6a4ae693-09e5-4d57-ae2e-86dfec0039e4">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c14f0715-a516-4265-82fa-209b7ecc32eb"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Montserrat" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Ilość zatrudnionych diagnostów:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="15" y="55" width="210" height="20" uuid="18c29e0f-6185-4b37-9513-22ae457f251b">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c14f0715-a516-4265-82fa-209b7ecc32eb"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Montserrat" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Całkowity zarobek uzyskany na stacji:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="235" y="35" width="100" height="20" uuid="9750d30c-f8e3-40c3-a234-90148d867cbe">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a35d7269-8e0c-4d24-b4f7-9629f5f0d7f6"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Montserrat"/>
+					</textElement>
+					<textFieldExpression><![CDATA[NumberFormat.getIntegerInstance().format($F{ILOSC_BADAN})]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="225" y="55" width="200" height="20" uuid="42a00ec1-6525-466a-b54d-9c77c1942abe">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a35d7269-8e0c-4d24-b4f7-9629f5f0d7f6"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Montserrat"/>
+					</textElement>
+					<textFieldExpression><![CDATA[String.format("%.2f", (double) $F{ILOSC_ZAROBKU})+" zł"]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="50" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="0" y="0" width="45" height="25" uuid="a662a3d1-326d-4a8b-ba01-295a39d50741">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Montserrat" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data: "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="45" y="0" width="125" height="25" uuid="7bb17893-c93c-4094-9dba-b3aaa6807ca4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Montserrat" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="0" y="25" width="45" height="25" uuid="66a6afaa-a841-459c-bdb1-d90db5f63de2">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font fontName="Montserrat" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Kod: "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="45" y="25" width="150" height="25" uuid="532d690d-3a8b-4a2b-a472-473d3279f619">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Montserrat" size="10" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{idCode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="10" width="100" height="30" uuid="766c4577-5914-44e6-9083-50a7f9c1f101">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Montserrat" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}+"/"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="280" y="10" width="100" height="30" uuid="ae5ae64b-4ff6-4d91-94f1-49bf0cc98f43"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Montserrat" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="505" y="0" width="50" height="50" uuid="3de8302c-1c94-4fc4-8652-e9b586983278">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{qrCode}]]></imageExpression>
+			</image>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="725">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="0" y="0" width="555" height="20" uuid="6b5ebb7e-5c0e-4e4d-9c3f-e512cba3706f">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ad636c9b-0375-46fd-b5ba-0578a071d4ea"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Montserrat" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PODSUMOWANIE:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="40" width="100" height="20" uuid="5dd3745b-b44b-4cf4-ac40-e00a31faf28d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a35d7269-8e0c-4d24-b4f7-9629f5f0d7f6"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Montserrat"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{ilosc_badan}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="290" y="60" width="200" height="20" uuid="e2355a55-6d27-4817-a9d9-8b171af1f67e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a35d7269-8e0c-4d24-b4f7-9629f5f0d7f6"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Montserrat"/>
+				</textElement>
+				<textFieldExpression><![CDATA[String.format("%.2f", (double) $V{ilosc_zarobkow})+" zł"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="310" y="20" width="100" height="20" uuid="6a39d66c-0e77-42e2-941a-f5a6f719ac83">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a35d7269-8e0c-4d24-b4f7-9629f5f0d7f6"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Montserrat"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{ilosc_zatrudnionych}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="60" width="290" height="20" uuid="17f1bc41-c284-4460-b020-07642b23d657">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c14f0715-a516-4265-82fa-209b7ecc32eb"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Montserrat" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Całkowity zarobek uzyskany na wszystkich stacjach:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="40" width="300" height="20" uuid="acc2a83f-8265-428d-b969-768914551831">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c14f0715-a516-4265-82fa-209b7ecc32eb"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Montserrat" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ilość przeprowadzonych badań na wszystkich stacjach:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="20" width="310" height="20" uuid="68aa51e3-51dc-4522-9e7f-c44dc4fdc1df">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c14f0715-a516-4265-82fa-209b7ecc32eb"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Montserrat" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ilość zatrudnionych diagnostów na wszystkich stacjach:]]></text>
+			</staticText>
+			<pieChart>
+				<chart isShowLegend="false" evaluationTime="Report" theme="aegean">
+					<reportElement x="0" y="95" width="555" height="200" uuid="d95f6333-2779-4e25-bf24-f33be1fe6e32">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineColor="#FFFFFF"/>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+					</box>
+					<chartTitle>
+						<font fontName="Montserrat" size="14" isBold="true"/>
+						<titleExpression><![CDATA["UDZIAŁ POSZCZEGÓLNYCH STACJI W ZAROBKACH"]]></titleExpression>
+					</chartTitle>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<pieDataset minPercentage="0.0">
+					<keyExpression><![CDATA[$F{NAZWA}]]></keyExpression>
+					<valueExpression><![CDATA[$F{ILOSC_ZAROBKU}]]></valueExpression>
+				</pieDataset>
+				<piePlot labelFormat="{0} ({2})" legendLabelFormat="">
+					<plot/>
+					<itemLabel>
+						<font fontName="Montserrat"/>
+					</itemLabel>
+				</piePlot>
+			</pieChart>
+			<pieChart>
+				<chart isShowLegend="false" evaluationTime="Report" theme="aegean">
+					<reportElement x="0" y="310" width="555" height="200" uuid="99844d99-eb24-4cf1-9e91-bf70a9df7c8e">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineColor="#FFFFFF"/>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+					</box>
+					<chartTitle>
+						<font fontName="Montserrat" size="14" isBold="true"/>
+						<titleExpression><![CDATA["UDZIAŁ POSZCZEGÓLNYCH STACJI W BADANIACH"]]></titleExpression>
+					</chartTitle>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<pieDataset minPercentage="0.0">
+					<keyExpression><![CDATA[$F{NAZWA}]]></keyExpression>
+					<valueExpression><![CDATA[$F{ILOSC_BADAN}]]></valueExpression>
+				</pieDataset>
+				<piePlot labelFormat="{0} ({2})">
+					<plot/>
+					<itemLabel>
+						<font fontName="Montserrat"/>
+					</itemLabel>
+				</piePlot>
+			</pieChart>
+			<pieChart>
+				<chart isShowLegend="false" evaluationTime="Report" theme="aegean">
+					<reportElement x="0" y="525" width="555" height="200" uuid="54934d3d-00b3-49e6-bd56-679a4a176633">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineColor="#FFFFFF"/>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+					</box>
+					<chartTitle>
+						<font fontName="Montserrat" size="14" isBold="true"/>
+						<titleExpression><![CDATA["PODZIAŁ DIAGNOSTÓW NA POSZCZEGÓLNYCH STACJACH"]]></titleExpression>
+					</chartTitle>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<pieDataset minPercentage="0.0">
+					<keyExpression><![CDATA[$F{NAZWA}]]></keyExpression>
+					<valueExpression><![CDATA[$F{ILOSC_DIAGNOSTOW}]]></valueExpression>
+				</pieDataset>
+				<piePlot labelFormat="{0} ({2})">
+					<plot/>
+					<itemLabel>
+						<font fontName="Montserrat"/>
+					</itemLabel>
+				</piePlot>
+			</pieChart>
+		</band>
+	</summary>
+</jasperReport>
